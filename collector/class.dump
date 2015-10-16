@@ -1,0 +1,10 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE class (		-- Device class (i.e. DNCC, CDS, Linux, CiscoSwitch, etc)
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(32) NOT NULL
+);
+INSERT INTO "class" VALUES(1,'DNCC');
+INSERT INTO "class" VALUES(2,'CDS');
+INSERT INTO "class" VALUES(3,'CiscoSwitch');
+COMMIT;

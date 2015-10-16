@@ -1,0 +1,11 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE test_parse (   -- Indicates how many levels deep indexes go for table-based OIDS                                                          
+    id INTEGER PRIMARY KEY,                                                                                                                            
+    oid INTEGER,            -- Foreign Key link to test_item.id                                                                                        
+    levels INTEGER          -- Number of levels indexes are nested                                                                                     
+);
+INSERT INTO "test_parse" VALUES(1,1,2);
+INSERT INTO "test_parse" VALUES(2,2,3);
+INSERT INTO "test_parse" VALUES(3,3,3);
+COMMIT;

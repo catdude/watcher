@@ -1,0 +1,13 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE test_master (
+id INTEGER PRIMARY KEY,
+oid CHAR(128),
+name CHAR(128),
+mib CHAR(64),
+class INTEGER
+);
+INSERT INTO "test_master" VALUES(1,'.1.3.6.1.4.1.303.3.3.12.19.3.501.1','dnccQosInrouteTable','DPC-DNCC-MIB',1);
+INSERT INTO "test_master" VALUES(2,'.1.3.6.1.4.1.303.3.3.12.19.3.502.1','dnccQosRemoteTable','DPC-DNCC-MIB',1);
+INSERT INTO "test_master" VALUES(3,'.1.3.6.1.4.1.303.3.3.12.19.4.5.1.4','dpcDnccIQoSStBWDis','DPC-DNCC-MIB',1);
+COMMIT;

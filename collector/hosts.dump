@@ -1,0 +1,68 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE hosts (
+id INTEGER PRIMARY KEY,
+name CHAR(64),
+ip CHAR1(16),
+class INTEGER,     -- Foreign  key link to "class" table (DNCC, CDS, etc)
+site INTEGER,
+status INTEGER,      -- 0 = inactive, 1 = active
+type INTEGER,       -- 0 = ping only, 1 = SNMP
+community CHAR(32) -- SNMP community string, if applicable
+);
+INSERT INTO "hosts" VALUES(1,'cs03.us','192.168.101.13',3,1,1,1,'row44read');
+INSERT INTO "hosts" VALUES(2,'cs04.us','192.168.101.14',3,1,1,1,'row44read');
+INSERT INTO "hosts" VALUES(3,'AMC-9A_DNCC_1','192.168.10.150',1,1,1,1,'public');
+INSERT INTO "hosts" VALUES(4,'AMC-9A_DNCC_2','192.168.10.151',1,1,1,1,'public');
+COMMIT;
+CREATE TABLE measurement (	-- Description of measurements to be performed
+	id INTEGER PRIMAY KEY,
+	name VARCHAR(32) NOT NULL,
+	class INTEGER NOT NULL,
+	db VARCHAR(64) NOT NULL,
+	desc VARCHAR(64),
+	period INTEGER
+);
+CREATE TABLE class (		-- Device class (i.e. DNCC, CDS, Linux, CiscoSwitch, etc)
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(32) NOT NULL
+);
+CREATE TABLE collector (	-- All hosts that will be collecting data from devices for Watcher
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(32) NOT NULL,
+	ip VARCHAR(16) NOT NULL
+);
+CREATE TABLE site (		-- Locations where devices are clustered (NLV, Detroit, EU, Lux, etc)
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(32) NOT NULL,
+	thru INTEGER,       -- If connected through VPN, through which site does VPN run
+    collector INTEGER
+);
+CREATE TABLE hosts (
+id INTEGER PRIMARY KEY,
+name CHAR(64),
+ip CHAR1(16),
+class INTEGER,     -- Foreign  key link to "class" table (DNCC, CDS, etc)
+site INTEGER,
+status INTEGER,      -- 0 = inactive, 1 = active
+type INTEGER,       -- 0 = ping only, 1 = SNMP
+community CHAR(32) -- SNMP community string, if applicable
+);
+CREATE TABLE test_item (    -- single-line OIDs and line-item OIDs from above table-based OIDs                                                         
+    id INTEGER PRIMARY KEY,                                                                                                                            
+    oid CHAR(128),                                                                                                                                     
+    measurement INTEGER,    --Foreign key link to 'measurements' table                                                                                 
+    series CHAR(64)         -- Name of InfluxDB series to store values                                                                                 
+);
+CREATE TABLE test_parse (   -- Indicates how many levels deep indexes go for table-based OIDS                                                          
+    id INTEGER PRIMARY KEY,                                                                                                                            
+    oid INTEGER,            -- Foreign Key link to test_item.id                                                                                        
+    levels INTEGER          -- Number of levels indexes are nested                                                                                     
+);
+CREATE TABLE test_master (
+id INTEGER PRIMARY KEY,
+oid CHAR(128),
+name CHAR(128),
+mib CHAR(64),
+class INTEGER
+);

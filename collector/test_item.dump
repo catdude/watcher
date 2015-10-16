@@ -1,0 +1,14 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE test_item (    -- single-line OIDs and line-item OIDs from above table-based OIDs                                                         
+    id INTEGER PRIMARY KEY,                                                                                                                            
+    oid CHAR(128),                                                                                                                                     
+    measurement INTEGER,    --Foreign key link to 'measurements' table                                                                                 
+    series CHAR(64)         -- Name of InfluxDB series to store values                                                                                 
+);
+INSERT INTO "test_item" VALUES(1,'.1.3.6.1.4.1.303.3.3.12.19.3.502.1.5',1,'dncc_inroute_stats');
+INSERT INTO "test_item" VALUES(2,'.1.3.6.1.4.1.303.3.3.12.19.3.502.1.7',1,'dncc_inroute_stats');
+INSERT INTO "test_item" VALUES(3,'.1.3.6.1.4.1.303.3.3.12.19.3.501.1.8',1,'dncc_inroute_stats');
+INSERT INTO "test_item" VALUES(4,'.1.3.6.1.4.1.303.3.3.12.19.3.501.1.28',1,'dncc_inroute_stats');
+INSERT INTO "test_item" VALUES(5,'.1.3.6.1.4.1.303.3.3.12.19.4.5.1.4',1,'dncc_inroute_stats');
+COMMIT;

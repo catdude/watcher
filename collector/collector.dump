@@ -1,0 +1,9 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE collector (	-- All hosts that will be collecting data from devices for Watcher
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(32) NOT NULL,
+	ip VARCHAR(16) NOT NULL
+);
+INSERT INTO "collector" VALUES(1,'Watcher.US','192.168.100.134');
+COMMIT;
