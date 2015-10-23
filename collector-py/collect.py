@@ -1,4 +1,16 @@
 #!/usr/bin/python2.7
+#
+# Reference https://goless.readthedocs.org/en/latest/
+#
+# Also look at https://docs.python.org/2/library/threading.html, 
+# https://docs.python.org/2/library/multiprocessing.html,
+# https://pymotw.com/2/multiprocessing/basics.html, 
+# http://www.toptal.com/python/beginners-guide-to-concurrency-and-parallelism-in-python,
+# and https://www.binpress.com/tutorial/simple-python-parallelism/121
+#
+# Function: given a list of hosts and a list of OIDs, spawn multiple coroutines to read
+# the listed OIDs from the listed hosts.
+#
 
 from pysnmp.hlapi import *
 import goless

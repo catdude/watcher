@@ -62,7 +62,7 @@ func main() {
         log.Fatal(err)
     }
     defer rows.Close()
-        
+
     for rows.Next() {
         var name, ip string
         var version, site int
@@ -78,7 +78,7 @@ func main() {
     }
 
     sqlOIDs := "select oid, name from test_master where class = ? "
-    
+
     rows, err = db.Query(sqlOIDs, classID)
     if err != nil {
         log.Fatal(err)
@@ -93,7 +93,7 @@ func main() {
         if verbose { fmt.Println("We got '", oid, "' (", name, ")") }
         oidSlice = append(oidSlice, oid)
         oidMap[oid] = name
-    } 
+    }
 
     if verbose {
 	    fmt.Printf("After the database access, we have addresses of %v\n", ipSlice)
@@ -103,21 +103,30 @@ func main() {
 	    spew.Dump(oidMap)
     }
 
-    procs := 0
+    /*  We will return a non-zero error code on the channel if the code in 
+        the goroutine encounters an error. If no errors occur, the goroutine
+        will return a zero.
+    */
+    doneCount := 0
+    callCount := len(hostSlice)
+    done := make(chan bool)
     for _, h := range hostSlice {
-        procs++
-        c := make(chan bool, 5)
-        getData(h, oidSlice, c)
-        d := <-c
-        if d == true {
-            procs--
-        }
+        c := make(chan int, 1)
+        defer  close(c) 
+        go getData(h, oidSlice, c)
     }
 
-    //time.Sleep(10 * time.Second)
+    for doneCount != callCount {
+        select {
+        case <-done:
+            doneCount++
+        case <-time.After(time.Second * 2):
+            fmt.Println("Timeout waiting for goroutine")
+        }
+    }
 }
 
-func printSlice(s string, x[] string) {
+func printSlice(s string, x []string) {
     fmt.Printf("%s len=%d cap=%d %v\n", s, len(x), cap(x), x)
 }
 
@@ -140,7 +149,7 @@ func getData(h host, oids []string, c chan bool) {
     runtime.Gosched()
     defer g.Default.Conn.Close()
     for _, o := range oids {
-        fmt.Printf("About to BulkWalkAll %s on host %s\n", o, h.addr)
+        fmt.Printf("About to BulkWalkAll %s on host %s\n", o, h.Addr)
         result, err = g.Default.BulkWalkAll(o)
         if err != nil {
             log.Fatalf("gosnmp.BulkWalkAll failed: %v", err)
